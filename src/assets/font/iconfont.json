@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11488002",
+      "name": "certified-supplier",
+      "font_class": "certified-supplier",
+      "unicode": "e747",
+      "unicode_decimal": 59207
+    },
+    {
+      "icon_id": "11488021",
+      "name": "Currency Converter",
+      "font_class": "CurrencyConverter",
+      "unicode": "e74b",
+      "unicode_decimal": 59211
+    },
+    {
+      "icon_id": "11488092",
+      "name": "online-tracking",
+      "font_class": "online-tracking",
+      "unicode": "e75b",
+      "unicode_decimal": 59227
+    },
+    {
+      "icon_id": "11488100",
+      "name": "product",
+      "font_class": "product",
+      "unicode": "e75d",
+      "unicode_decimal": 59229
+    },
+    {
+      "icon_id": "11488148",
+      "name": "tool",
+      "font_class": "tool",
+      "unicode": "e769",
+      "unicode_decimal": 59241
+    },
+    {
       "icon_id": "14303335",
       "name": "分配角色",
       "font_class": "fenpeijiaose",
@@ -13,11 +48,18 @@
       "unicode_decimal": 59209
     },
     {
+      "icon_id": "14303341",
+      "name": "个人中心",
+      "font_class": "gerenzhongxin",
+      "unicode": "e74a",
+      "unicode_decimal": 59210
+    },
+    {
       "icon_id": "14303347",
       "name": "密码",
       "font_class": "mima",
-      "unicode": "e74a",
-      "unicode_decimal": 59210
+      "unicode": "e74c",
+      "unicode_decimal": 59212
     }
   ]
 }
