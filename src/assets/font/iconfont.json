@@ -1,0 +1,23 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "14303335",
+      "name": "分配角色",
+      "font_class": "fenpeijiaose",
+      "unicode": "e749",
+      "unicode_decimal": 59209
+    },
+    {
+      "icon_id": "14303347",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e74a",
+      "unicode_decimal": 59210
+    }
+  ]
+}
