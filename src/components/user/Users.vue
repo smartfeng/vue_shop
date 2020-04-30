@@ -36,7 +36,7 @@
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)"></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="setRole(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -98,6 +98,29 @@
           <el-button type="primary" @click="editUser">确 定</el-button>
         </span>
       </el-dialog>
+      <el-dialog
+        title="分配角色"
+        :visible.sync="setRoleDialogVisible"
+        width="50%"
+        @close="setRoleDialogClosed"
+        >
+        <p>当前的用户： {{userinfo.username}}</p>
+        <p>当前的角色： {{userinfo.rolename}}</p>
+        <p>分配新角色：
+          <el-select v-model="selectedRoled" placeholder="请选择">
+            <el-option
+            v-for="item in rolesList"
+            :key="item.id"
+            :label="item.rolename"
+            :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+        </span>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -131,6 +154,11 @@ export default {
       query: '',
       addDialogVisible: false,
       editDialogVisible: false,
+      setRoleDialogVisible: false,
+      userinfo: {},
+      rolesList: [],
+      // 已选中的角色ID值
+      selectedRoled: '',
       // 添加表单
       addForm: {
         username: '',
@@ -191,7 +219,7 @@ export default {
           },
           {
             id: 502,
-            rolename: 'c测试角色',
+            rolename: '测试角色',
             username: 'linken',
             create_time: 148720255,
             mobile: '18210393357',
@@ -280,6 +308,33 @@ export default {
       }
       this.$message.success('删除用户成功')
       this.getUserList()
+    },
+    async setRole(userinfo) {
+      this.userinfo = userinfo
+      console.log(userinfo)
+      // 调接口获取角色列表
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败')
+      }
+      this.rolesList = res.data
+      this.rolesList = this.queryInfo.users
+      this.setRoleDialogVisible = true
+    },
+    async saveRoleInfo() {
+      if (!this.selectedRoled) {
+        return this.$message.error('请选择要分配的角色')
+      }
+      const { data: res } = await this.$http.put(`users/${this.userinfo.id}/role`, { rid: this.selectedRoled })
+      if (res.meta.status !== 200) {
+        return this.$message.error('更新角色失败')
+      }
+      this.$message.success('更新角色成功')
+      this.getUserList()
+    },
+    setRoleDialogClosed() {
+      this.selectedRoled = ''
+      this.userinfo = {}
     }
     // 监听switch开关状态的改变
     // async userStateChange(userinfo) {
