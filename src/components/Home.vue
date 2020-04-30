@@ -35,7 +35,9 @@
 <script>
 export default {
   created() {
+    // 初始化菜单
     this.getMenuList()
+    // 储存当前路径的状态，显示高亮
     this.activePath = window.sessionStorage.getItem('activePath')
   },
   data() {
@@ -57,80 +59,11 @@ export default {
       window.sessionStorage.clear()
       this.$router.push('/login')
     },
-    getMenuList() {
-      this.menuList = [
-        {
-          id: 101,
-          authName: '用户管理',
-          path: null,
-          children: [
-            {
-              id: 102,
-              authName: '用户列表',
-              path: 'users',
-              children: []
-            }
-          ]
-        },
-        {
-          id: 104,
-          authName: '权限管理',
-          path: null,
-          children: [
-            {
-              id: 105,
-              authName: '角色列表',
-              path: 'roles',
-              children: []
-            },
-            {
-              id: 103,
-              authName: '权限列表',
-              path: 'rights',
-              children: []
-            }
-          ]
-        },
-        {
-          id: 106,
-          authName: '商品管理',
-          path: null,
-          children: [
-            {
-              id: 107,
-              authName: '商品列表1',
-              path: null,
-              children: []
-            }
-          ]
-        },
-        {
-          id: 108,
-          authName: '订单管理',
-          path: null,
-          children: [
-            {
-              id: 109,
-              authName: '订单列表1',
-              path: null,
-              children: []
-            }
-          ]
-        },
-        {
-          id: 110,
-          authName: '数据统计',
-          path: null,
-          children: [
-            {
-              id: 111,
-              authName: '统计列表1',
-              path: null,
-              children: []
-            }
-          ]
-        }
-      ]
+    async getMenuList() {
+      const { data: res } = await this.$http.get('menus')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      // 给侧边栏数据赋值
+      this.menuList = res.data
     },
     toggleCollapse() {
       this.isCollapse = !this.isCollapse

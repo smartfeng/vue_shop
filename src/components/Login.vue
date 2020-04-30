@@ -47,20 +47,18 @@ export default {
   },
   methods: {
     resetLoginForm () {
-      console.log(this)
       this.$refs.loginFormRef.resetFields()
     },
     login () {
-      this.$refs.loginFormRef.validate(valid => {
-        console.log(valid)
+      this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return false
-        if (this.loginForm.username === 'admin' && this.loginForm.password === '123456') {
-        //   this.$message.success('登录成功');
-          window.sessionStorage.setItem('token', 'fengwenbiao')
-          this.$router.push('/home')
-        } else {
-          this.$message.error('登录失败')
+        const { data: res } = await this.$http.post('login', this.loginForm)
+        if (res.meta.status !== 200) {
+          return this.$message.error('登录失败')
         }
+        this.$message.success('登录成功')
+        window.sessionStorage.setItem('token', res.data.token)
+        this.$router.push('/home')
       })
     }
   }
