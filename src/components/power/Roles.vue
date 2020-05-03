@@ -60,7 +60,7 @@
     :visible.sync="showSetDialogVisible"
     width="50%"
     @close="setRightDialogClosed">
-    <el-tree :data="rightList" :props="treeProps" show-checkbox node-key="id" default-expand-all ref="treeRef"></el-tree>
+    <el-tree :data="rightList" :props="treeProps" show-checkbox node-key="id" default-expand-all ref="treeRef" :default-checked-keys="defKeys"></el-tree>
     <span slot="footer" class="dialog-footer">
         <el-button @click="showSetDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="allotRights" >确 定</el-button>
@@ -74,240 +74,21 @@ export default {
   data () {
     return {
       showSetDialogVisible: false,
+      // 树形控件的属性绑定对象
       treeProps: {
         children: 'children',
         label: 'authName'
       },
-      //   即将分配权限的角色id
+      // 当前即将分配权限的角色id
       roleId: '',
       defKeys: [],
+      // 获取所有权限的数据
       rightList: [],
-      rolelist: [
-        {
-          id: 30,
-          roleName: '主管',
-          roleDesc: '技术负责人',
-          children: [
-            {
-              id: 101,
-              authName: '商品管理',
-              path: 'goods',
-              children: [
-                {
-                  id: 111,
-                  authName: '商品列表',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 121,
-                      authName: '商品修改',
-                      path: 'goods'
-                    }
-                  ]
-                },
-                {
-                  id: 112,
-                  authName: '分类参数',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 122,
-                      authName: '获取参数列表',
-                      path: 'goods'
-                    },
-                    {
-                      id: 123,
-                      authName: '创建商品参数',
-                      path: 'goods'
-                    },
-                    {
-                      id: 124,
-                      authName: '删除商品参数',
-                      path: 'goods'
-                    }
-                  ]
-                },
-                {
-                  id: 113,
-                  authName: '商品分类',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 125,
-                      authName: '添加分类',
-                      path: 'goods'
-                    },
-                    {
-                      id: 126,
-                      authName: '删除分类',
-                      path: 'goods'
-                    },
-                    {
-                      id: 127,
-                      authName: '获取分类详情',
-                      path: 'goods'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              id: 102,
-              authName: '订单管理',
-              path: 'goods',
-              children: [
-                {
-                  id: 114,
-                  authName: '订单列表',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 128,
-                      authName: '添加订单',
-                      path: 'goods'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              id: 103,
-              authName: '权限管理',
-              path: 'goods',
-              children: [
-                {
-                  id: 115,
-                  authName: '角色列表',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 129,
-                      authName: '添加角色',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1291,
-                      authName: '删除角色',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1292,
-                      authName: '角色授权',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1293,
-                      authName: '取消角色授权',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1294,
-                      authName: '获取角色列表',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1295,
-                      authName: '获取角色详情',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1296,
-                      authName: '更新角色信息',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1297,
-                      authName: '更新角色权限',
-                      path: 'goods'
-                    }
-                  ]
-                },
-                {
-                  id: 116,
-                  authName: '权限列表',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 1231,
-                      authName: '查看权限',
-                      path: 'goods'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              id: 104,
-              authName: '用户管理',
-              path: 'goods',
-              children: [
-                {
-                  id: 117,
-                  authName: '用户列表',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 1241,
-                      authName: '添加用户',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1242,
-                      authName: '删除用户',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1243,
-                      authName: '更新用户',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1244,
-                      authName: '获取用户权限',
-                      path: 'goods'
-                    },
-                    {
-                      id: 1245,
-                      authName: '分配用户角色',
-                      path: 'goods'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              id: 105,
-              authName: '数据统计',
-              path: 'goods',
-              children: [
-                {
-                  id: 118,
-                  authName: '数据列表',
-                  path: 'goods',
-                  children: [
-                    {
-                      id: 1251,
-                      authName: '查看数据',
-                      path: 'goods'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 31,
-          roleName: '测试角色',
-          roleDesc: '测试角色描述',
-          children: [
-          ]
-        }
-      ]
+      rolelist: []
     }
   },
   created() {
-    // this.getRolesList()
+    this.getRolesList()
   },
   methods: {
     async getRolesList() {
@@ -316,7 +97,6 @@ export default {
         return this.$message.error('获取角色列表失败')
       }
       this.rolelist = res.data
-      console.log(this.rolelist)
     },
     async removeRightById(role, rightId) {
       const confirmResult = await this.$confirm('是否删除该y用户, 是否继续?', '提示', {
@@ -339,34 +119,41 @@ export default {
     },
     // 分配权限
     async showSetRightDialog(role) {
+      // 给当前即将分配角色权限用的id
       this.roleId = role.id
-      //   获取所有权限列表
-      //   const { data: res } = await this.$http.get('right/tree')
-      //   if (res.meta.status !== 200) {
-      //     return this.$message.error('获取权限数据失败')
-      //   }
-      //   this.rightList = res.data
-      this.rightList = this.rolelist[0].children
-      //   this.getLeafKeys(role, this.defKeys)
+      const { data: res } = await this.$http.get('rights/tree')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取权限失败')
+      }
+      this.rightList = res.data
+      // 递归获取三级节点的id
+      this.getLeafKeys(role, this.defKeys)
       this.showSetDialogVisible = true
     },
+    // 获取三级节点的所有id,通过递归
     getLeafKeys(node, arr) {
       if (!node.children) {
         return arr.push(node.id)
       }
-      node.children.foreach(item => this.getLeafKeys(item, arr))
+      node.children.forEach(item => this.getLeafKeys(item, arr))
     },
+    // 监听对话框的关闭，清空数组
     setRightDialogClosed() {
       this.defKeys = []
     },
+    // 为角色分配角色
     async allotRights() {
+      // 展开运算符合并到一个数组
       const keys = [...this.$refs.treeRef.getCheckedKeys(), ...this.$refs.treeRef.getHalfCheckedKeys()]
+      // 数组转为逗号拼接的字符串
       const idStr = keys.join(',')
+      // 角色分配的请求, 从打开对话框那里拿到权限id，roleId
       const { data: res } = await this.$http.post(`roles/${this.roleId}/rights`, { rids: idStr })
       if (res.meta.status !== 200) {
         return this.$message.error('分配权限失败')
       }
       this.$message.success('分配权限成功')
+      // 重新刷新列表
       this.getRolesList()
       this.showSetDialogVisible = false
     }

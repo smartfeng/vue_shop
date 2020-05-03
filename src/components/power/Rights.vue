@@ -29,48 +29,21 @@ export default {
   data () {
     return {
       //  权限列表
-      rightsList: [
-        {
-          'id': 101,
-          'authName': '商品管理',
-          'level': '0',
-          'pid': 0,
-          'path': 'goods'
-        },
-        {
-          'id': 102,
-          'authName': '订单管理',
-          'level': '1',
-          'pid': 0,
-          'path': 'bill'
-        },
-        {
-          'id': 103,
-          'authName': '权限管理',
-          'level': '0',
-          'pid': 0,
-          'path': 'right'
-        },
-        {
-          'id': 104,
-          'authName': '商品列表',
-          'level': '1',
-          'pid': 0,
-          'path': 'goods'
-        }
-      ]
+      rightsList: []
     }
   },
   created() {
-    //   this.getRightsList()
+    // 数据初始化
+    this.getRightsList()
   },
   methods: {
     //  获取用户列表
-    async gegetRightsListt() {
+    async getRightsList() {
       const { data: res } = await this.$http.get('rights/list')
       if (res.meta.status !== 200) {
         return this.$messges.error('获取权限列表失败')
       }
+      // 给权限列表赋值
       this.rightsList = res.data
     }
   }
