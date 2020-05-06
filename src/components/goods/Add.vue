@@ -55,16 +55,39 @@
                 </el-checkbox-group>
               </el-form-item>
             </el-tab-pane>
-            <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
-            <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
-            <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
+            <el-tab-pane label="商品属性" name="2">
+              <el-form-item :label="item.attr_name" v-for="item in onlyTableData" :key="item.attr_id">
+                <el-input v-model="item.attr_vals"></el-input>
+              </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane label="商品图片" name="3">
+              <el-upload
+                :action="uploadURL"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                list-type="picture"
+                :headers="headerObj"
+                :on-success="handleSuccess">
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
+            </el-tab-pane>
+            <el-tab-pane label="商品内容" name="4">
+              <!-- 富文本编辑器组件 -->
+              <quill-editor v-model="addForm.goods_introduce"></quill-editor>
+              <el-button type="primary" class="btnAdd">添加商品</el-button>
+            </el-tab-pane>
         </el-tabs>
       </el-form>
     </el-card>
+    <!-- 图片预览 -->
+    <el-dialog title="图片预览" :visible.sync="previewVisible" width="50%">
+      <img :src="previewPath" alt="" class="previewImg">
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
   data () {
     return {
@@ -74,7 +97,10 @@ export default {
         goods_price: 0,
         goods_weight: 0,
         goods_number: 0,
-        goods_cat: []
+        goods_cat: [],
+        pics: [],
+        goods_introduce: '',
+        attrs: []
       },
       addFormRules: {
         goods_name: [
@@ -100,7 +126,14 @@ export default {
         value: 'cat_id',
         children: 'children'
       },
-      manyTableData: []
+      manyTableData: [],
+      onlyTableData: [],
+      uploadURL: 'https://www.liulongbin.top:8888/api/private/v1/upload',
+      headerObj: {
+        Authorization: window.sessionStorage.getItem('token')
+      },
+      previewPath: '',
+      previewVisible: false
     }
   },
   created() {
@@ -137,7 +170,60 @@ export default {
           item.attr_vals = item.attr_vals.length === 0 ? [] : item.attr_vals.split(' ')
         })
         this.manyTableData = res.data
+      } else if (this.activeIndex === '2') {
+        const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`, { params: { sel: 'only' } })
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取失败')
+        }
+        this.onlyTableData = res.data
       }
+    },
+    handlePreview(file) {
+      this.previewPath = file.response.data.url
+      this.previewVisible = true
+    },
+    // 监听图片移除的事件
+    handleRemove(file) {
+      // 获取临时路径
+      const filePath = file.response.data.tmp_path
+      // 从pics数组中找到索引值
+      const i = this.addForm.pics.findIndex(x => x.pic === filePath)
+      // 根据索引值删除该项
+      this.addForm.pics.splice(i, 1)
+    },
+    // 监听图片上传成功的事件
+    handleSuccess(res) {
+      console.log(res)
+      // 拼接得到一个图片信息对象
+      const picInfo = { pics: res.data.tmp_path }
+      // 将图片信息对象push到pics数组中
+      this.addForm.pics.push(picInfo)
+      console.log(this.addForm)
+    },
+    add() {
+      this.$refs.addFormRef.validate(valid => {
+        if (!valid) {
+          return this.$message.error('晴填写必要的表单项')
+        }
+        const form =  _.cloneDeep(this.addForm)
+        form.goods_cat = form.goods_cat.join(',')
+        this.manyTableData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_value: item.attr_vals.join(' ')
+          }
+          this.addForm.attrs.push(newInfo)
+        })
+        this.onlyTableData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_value: item.attr_vals.join(' ')
+          }
+          this.addForm.attrs.push(newInfo)
+        })
+        form.attrs = this.addForm.attrs
+        console.log(form)
+      })
     }
   },
   computed: {
@@ -152,5 +238,13 @@ export default {
 </script>
 
 <style lang='less' scoped>
-
+.el-checkbox{
+  margin: 0 10px 0 0 !important;
+}
+.previewImg{
+  width: 100%;
+}
+.btnAdd{
+  margin-top: 15px;
+}
 </style>
