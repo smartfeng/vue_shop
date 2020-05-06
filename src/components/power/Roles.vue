@@ -60,7 +60,7 @@
     :visible.sync="showSetDialogVisible"
     width="50%"
     @close="setRightDialogClosed">
-    <el-tree :data="rightList" :props="treeProps" show-checkbox node-key="id" default-expand-all ref="treeRef"></el-tree>
+    <el-tree :data="rightList" :props="treeProps" show-checkbox node-key="id" default-expand-all ref="treeRef" :default-checked-keys="defKeys"></el-tree>
     <span slot="footer" class="dialog-footer">
         <el-button @click="showSetDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="allotRights" >确 定</el-button>
@@ -74,13 +74,15 @@ export default {
   data () {
     return {
       showSetDialogVisible: false,
+      // 树形控件的属性绑定对象
       treeProps: {
         children: 'children',
         label: 'authName'
       },
-      //   即将分配权限的角色id
+      // 当前即将分配权限的角色id
       roleId: '',
       defKeys: [],
+      // 获取所有权限的数据
       rightList: [],
       rolelist: []
     }
@@ -95,7 +97,6 @@ export default {
         return this.$message.error('获取角色列表失败')
       }
       this.rolelist = res.data
-      console.log(this.rolelist)
     },
     async removeRightById(role, rightId) {
       const confirmResult = await this.$confirm('是否删除该y用户, 是否继续?', '提示', {
@@ -118,34 +119,41 @@ export default {
     },
     // 分配权限
     async showSetRightDialog(role) {
+      // 给当前即将分配角色权限用的id
       this.roleId = role.id
-      //   获取所有权限列表
-      const { data: res } = await this.$http.get('right/tree')
+      const { data: res } = await this.$http.get('rights/tree')
       if (res.meta.status !== 200) {
-        return this.$message.error('获取权限数据失败')
+        return this.$message.error('获取权限失败')
       }
       this.rightList = res.data
-      this.rightList = this.rolelist[0].children
+      // 递归获取三级节点的id
       this.getLeafKeys(role, this.defKeys)
       this.showSetDialogVisible = true
     },
+    // 获取三级节点的所有id,通过递归
     getLeafKeys(node, arr) {
       if (!node.children) {
         return arr.push(node.id)
       }
-      node.children.foreach(item => this.getLeafKeys(item, arr))
+      node.children.forEach(item => this.getLeafKeys(item, arr))
     },
+    // 监听对话框的关闭，清空数组
     setRightDialogClosed() {
       this.defKeys = []
     },
+    // 为角色分配角色
     async allotRights() {
+      // 展开运算符合并到一个数组
       const keys = [...this.$refs.treeRef.getCheckedKeys(), ...this.$refs.treeRef.getHalfCheckedKeys()]
+      // 数组转为逗号拼接的字符串
       const idStr = keys.join(',')
+      // 角色分配的请求, 从打开对话框那里拿到权限id，roleId
       const { data: res } = await this.$http.post(`roles/${this.roleId}/rights`, { rids: idStr })
       if (res.meta.status !== 200) {
         return this.$message.error('分配权限失败')
       }
       this.$message.success('分配权限成功')
+      // 重新刷新列表
       this.getRolesList()
       this.showSetDialogVisible = false
     }

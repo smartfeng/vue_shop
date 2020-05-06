@@ -33,6 +33,7 @@ export default {
     }
   },
   created() {
+    // 数据初始化
     this.getRightsList()
   },
   methods: {
@@ -42,6 +43,7 @@ export default {
       if (res.meta.status !== 200) {
         return this.$messges.error('获取权限列表失败')
       }
+      // 给权限列表赋值
       this.rightsList = res.data
     }
   }
