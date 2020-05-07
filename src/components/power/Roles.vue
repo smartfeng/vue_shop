@@ -10,7 +10,7 @@
     <el-card class='box-card'>
       <el-row>
         <el-col>
-          <el-button type="primary">添加角色</el-button>
+          <el-button type="primary" @click="addRoles">添加角色</el-button>
         </el-col>
       </el-row>
       <el-table :data="rolelist" border stripe>
@@ -53,7 +53,26 @@
         </el-table-column>
       </el-table>
     </el-card>
-
+    <!-- 添加角色 -->
+    <el-dialog
+    title="添加角色"
+    :visible.sync="addDialogVisible"
+    width="50%"
+    @close="closeDialog"
+    >
+        <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="90px">
+            <el-form-item label="角色名称" prop="roleName">
+                <el-input v-model="addForm.roleName"></el-input>
+            </el-form-item>
+            <el-form-item label="角色描述" prop="roleDesc">
+                <el-input v-model="addForm.roleDesc"></el-input>
+            </el-form-item>
+        </el-form>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+    </span>
+    </el-dialog>
     <!-- 分配权限 -->
     <el-dialog
     title="分配权限"
@@ -73,7 +92,14 @@
 export default {
   data () {
     return {
+      // 分配权限
       showSetDialogVisible: false,
+      // 角色添加
+      addDialogVisible: false,
+      addForm: {
+        roleName: '',
+        roleDesc: ''
+      },
       // 树形控件的属性绑定对象
       treeProps: {
         children: 'children',
@@ -84,7 +110,15 @@ export default {
       defKeys: [],
       // 获取所有权限的数据
       rightList: [],
-      rolelist: []
+      rolelist: [],
+      addFormRules: {
+        roleName: [
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ],
+        roleDesc: [
+          { required: true, message: '请输入角色描述', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
@@ -97,7 +131,17 @@ export default {
         return this.$message.error('获取角色列表失败')
       }
       this.rolelist = res.data
+      console.log(res.data)
     },
+    // 添加角色
+    addRoles() {
+      this.addDialogVisible = true
+    },
+    // 关闭对话框
+    closeDialog() {
+      this.$refs.addFormRef.resetFields()
+    },
+    // 移除该用户
     async removeRightById(role, rightId) {
       const confirmResult = await this.$confirm('是否删除该y用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
