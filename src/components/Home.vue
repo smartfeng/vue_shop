@@ -44,11 +44,11 @@ export default {
     return {
       menuList: [],
       iconObj: {
-        '101': 'iconfont icon-certified-supplier',
-        '104': 'iconfont icon-online-tracking',
-        '106': 'iconfont icon-product',
-        '108': 'iconfont icon-tool',
-        '110': 'iconfont icon-CurrencyConverter'
+        '125': 'iconfont icon-certified-supplier',
+        '103': 'iconfont icon-online-tracking',
+        '101': 'iconfont icon-product',
+        '102': 'iconfont icon-tool',
+        '145': 'iconfont icon-CurrencyConverter'
       },
       isCollapse: false,
       activePath: ''
@@ -64,6 +64,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       // 给侧边栏数据赋值
       this.menuList = res.data
+      console.log(this.menuList)
     },
     toggleCollapse() {
       this.isCollapse = !this.isCollapse

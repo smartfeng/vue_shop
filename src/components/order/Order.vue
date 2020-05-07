@@ -11,8 +11,8 @@
       <!-- 搜索和添加区域 -->
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="queryInfo.query">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getOrderList">
+            <el-button slot="append" icon="el-icon-search" @click="getOrderList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -100,13 +100,16 @@ import cityData from './citydata.js'
 export default {
   data () {
     return {
+      // 查询对象
       queryInfo: {
         query: '',
         pagenum: 1,
         pagesize: 10
       },
+      // 订单数组
       orderList: [],
       total: 0,
+      //   地址对话框
       addressVisible: false,
       addressForm: {
         address1: [],

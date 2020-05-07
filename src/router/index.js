@@ -30,7 +30,7 @@ const routes = [
     redirect: '/welcome',
     children: [
       {
-        path: '/welcome',
+        path: '/home',
         component: Welcome
       },
       {
@@ -83,11 +83,11 @@ router.beforeEach((to, from, next) => {
   // from 代表从哪个路径跳转而来
   // next 是一个函数，表示放行
   // next() 放行    next('/login') 强制跳转
-
+  // 访问登录页 放行
   if (to.path === '/login') return next()
   // 获取token
   const tokenStr = window.sessionStorage.getItem('token')
-
+  // 没有token 强制跳转到登录页
   if (!tokenStr) return next('/login')
   next()
 })
