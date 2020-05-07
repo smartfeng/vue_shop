@@ -30,5 +30,5 @@ body,
     font-size: 13px;
 }
 .ql-editor{
-    height: 300px;
+    height: 300px !important;
 }

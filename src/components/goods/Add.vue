@@ -74,7 +74,7 @@
             <el-tab-pane label="商品内容" name="4">
               <!-- 富文本编辑器组件 -->
               <quill-editor v-model="addForm.goods_introduce"></quill-editor>
-              <el-button type="primary" class="btnAdd">添加商品</el-button>
+              <el-button type="primary" class="btnAdd" @click="add">添加商品</el-button>
             </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+// 引入lodash的包
 import _ from 'lodash'
 export default {
   data () {
@@ -201,10 +202,11 @@ export default {
       console.log(this.addForm)
     },
     add() {
-      this.$refs.addFormRef.validate(valid => {
+      this.$refs.addFormRef.validate(async valid => {
         if (!valid) {
           return this.$message.error('晴填写必要的表单项')
         }
+        // 做深克隆， 不碰addForm的数据
         const form = _.cloneDeep(this.addForm)
         form.goods_cat = form.goods_cat.join(',')
         this.manyTableData.forEach(item => {
@@ -217,12 +219,18 @@ export default {
         this.onlyTableData.forEach(item => {
           const newInfo = {
             attr_id: item.attr_id,
-            attr_value: item.attr_vals.join(' ')
+            attr_value: item.attr_vals
           }
           this.addForm.attrs.push(newInfo)
         })
         form.attrs = this.addForm.attrs
         console.log(form)
+        const { data: res } = await this.$http.post('goods', form)
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加商品失败')
+        }
+        this.$message.success('添加商品成功')
+        this.$router.push('/goods')
       })
     }
   },
