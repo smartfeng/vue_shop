@@ -205,7 +205,7 @@ export default {
         if (!valid) {
           return this.$message.error('晴填写必要的表单项')
         }
-        const form =  _.cloneDeep(this.addForm)
+        const form = _.cloneDeep(this.addForm)
         form.goods_cat = form.goods_cat.join(',')
         this.manyTableData.forEach(item => {
           const newInfo = {
