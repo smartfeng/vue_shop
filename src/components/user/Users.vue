@@ -266,7 +266,6 @@ export default {
         this.$message.success('添加用户成功')
         this.addDialogVisible = false
         this.getUserList()
-        this.addDialogVisible = false
       })
     },
     // 展示编辑用户对话框

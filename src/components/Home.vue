@@ -3,7 +3,7 @@
     <el-header>
       <div>
         <img src="../assets/heima.png" alt />
-        <span>电商平台</span>
+        <span class="title_logo">电商后台管理系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>
@@ -64,7 +64,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       // 给侧边栏数据赋值
       this.menuList = res.data
-      console.log(this.menuList)
+    //   console.log(this.menuList)
     },
     toggleCollapse() {
       this.isCollapse = !this.isCollapse
@@ -115,6 +115,9 @@ export default {
     line-height: 24px;
     color: #fff;
     cursor: pointer;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
+}
+.title_logo{
+    font-size: 18px;
 }
 </style>

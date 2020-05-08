@@ -9,14 +9,11 @@
     <!-- 卡片区域 -->
     <el-card class="box-card">
       <!-- 搜索和添加区域 -->
-      <el-row :gutter="20">
+      <el-row>
         <el-col :span="8">
           <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getOrderList">
             <el-button slot="append" icon="el-icon-search" @click="getOrderList"></el-button>
           </el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary">添加商品</el-button>
         </el-col>
       </el-row>
       <!-- 表格区域 -->
@@ -65,6 +62,7 @@
                 <el-cascader
                 v-model="addressForm.address1"
                 :options="cityData"
+                :props="{ expandTrigger: 'hover' }"
                 ></el-cascader>
             </el-form-item>
             <el-form-item label="详细地址" prop="address2">
@@ -169,6 +167,6 @@ export default {
 
 <style lang='less' scoped>
 .el-cascader{
-    width: 300px;
+    width: 100%;
 }
 </style>

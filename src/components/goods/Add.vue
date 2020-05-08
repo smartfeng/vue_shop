@@ -92,17 +92,23 @@ import _ from 'lodash'
 export default {
   data () {
     return {
+      // 步骤条默认激活，与tab联动
       activeIndex: '0',
+      // 添加商品的表单对象
       addForm: {
         goods_name: '',
         goods_price: 0,
         goods_weight: 0,
         goods_number: 0,
+        // 商品所属分类数组
         goods_cat: [],
+        // 图片的数组
         pics: [],
+        // 商品的详情描述
         goods_introduce: '',
         attrs: []
       },
+      // 表单验证规则
       addFormRules: {
         goods_name: [
           { required: true, message: '请输入商品名称', trigger: 'blur' }
@@ -122,18 +128,24 @@ export default {
       },
       // 商品分类列表
       cateList: [],
+      // 级联选择器配置
       cateProps: {
         label: 'cat_name',
         value: 'cat_id',
         children: 'children'
       },
+      // 动态参数列表
       manyTableData: [],
+      // 静态参数列表
       onlyTableData: [],
+      // 图片上传地址
       uploadURL: 'https://www.liulongbin.top:8888/api/private/v1/upload',
+      // 图片上传组件的请求对象
       headerObj: {
         Authorization: window.sessionStorage.getItem('token')
       },
       previewPath: '',
+      // 图片预览对话框
       previewVisible: false
     }
   },
@@ -141,6 +153,7 @@ export default {
     this.getCateList()
   },
   methods: {
+    // 获取商品分类数据列表
     async getCateList() {
       const { data: res } = await this.$http.get('categories')
       if (res.meta.status !== 200) {
@@ -149,6 +162,7 @@ export default {
       this.cateList = res.data
       console.log(this.cateList)
     },
+    // 级联选择器选中时触发
     handleChange() {
       if (this.addForm.goods_cat.length !== 3) {
         this.addForm.goods_cat = []
@@ -156,12 +170,15 @@ export default {
     },
     beforeTabsLeave(activeName, oldAciveName) {
       console.log(activeName, oldAciveName)
+      // 未选中商品分类阻止tab标签跳转
       if (oldAciveName === '0' && this.addForm.goods_cat.length !== 3) {
         this.$message.error('请选择商品分类')
         return false
       }
     },
+    // tab标签被选中时触发
     async tabClicked() {
+      // 访问动态参数面板
       if (this.activeIndex === '1') {
         const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`, { params: { sel: 'many' } })
         if (res.meta.status !== 200) {
@@ -179,6 +196,7 @@ export default {
         this.onlyTableData = res.data
       }
     },
+    // 处理图片预览
     handlePreview(file) {
       this.previewPath = file.response.data.url
       this.previewVisible = true
@@ -209,6 +227,8 @@ export default {
         // 做深克隆， 不碰addForm的数据
         const form = _.cloneDeep(this.addForm)
         form.goods_cat = form.goods_cat.join(',')
+
+        // 处理动态参数
         this.manyTableData.forEach(item => {
           const newInfo = {
             attr_id: item.attr_id,
@@ -216,6 +236,8 @@ export default {
           }
           this.addForm.attrs.push(newInfo)
         })
+
+        // 处理静态属性
         this.onlyTableData.forEach(item => {
           const newInfo = {
             attr_id: item.attr_id,
@@ -225,6 +247,8 @@ export default {
         })
         form.attrs = this.addForm.attrs
         console.log(form)
+        // 发出请求，添加商品
+        // 商品名称必须是唯一的
         const { data: res } = await this.$http.post('goods', form)
         if (res.meta.status !== 201) {
           return this.$message.error('添加商品失败')

@@ -31,11 +31,14 @@
         </el-table-column>
         <el-table-column label="操作" width="120px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit"></el-button>
+            <!-- 编辑 -->
+            <el-button size="mini" type="primary" icon="el-icon-edit" @click="editListHan(scope.row.goods_id)"></el-button>
+            <!-- 删除 -->
             <el-button size="mini" type="danger" icon="el-icon-delete" @click="removeById(scope.row.goods_id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页区域 -->
       <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -54,12 +57,14 @@
 export default {
   data () {
     return {
+      //   商品列表
       goodsList: [],
       queryInfo: {
         query: '',
         pagenum: 1,
         pagesize: 10
       },
+      // 商品总数
       total: 0
     }
   },
@@ -73,6 +78,7 @@ export default {
         return this.$message.error('获取失败')
       }
       this.goodsList = res.data.goods
+      console.log(res.data.goods)
       this.total = res.data.total
     },
     handleSizeChange(newsize) {
@@ -83,6 +89,7 @@ export default {
       this.queryInfo.pagenum = newnum
       this.getGoodsList()
     },
+    // 通过id删除指定商品
     async removeById(id) {
       const confirmRes = await this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -101,6 +108,10 @@ export default {
     },
     addGoods() {
       this.$router.push('/goods/add')
+    },
+    async editListHan(id) {
+      const { data: res } = await this.$http.get('goods/' + id)
+      console.log(res.data)
     }
   }
 }
