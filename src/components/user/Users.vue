@@ -69,7 +69,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
-      <!-- 添加用户 -->
+      <!-- 添加用户对话框 -->
       <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
         <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
           <el-form-item label="用户名" prop="username">
@@ -113,7 +113,7 @@
           <el-button type="primary" @click="editUser">确 定</el-button>
         </span>
       </el-dialog>
-      <!-- 分配角色 -->
+      <!-- 分配角色对话框 -->
       <el-dialog
         title="分配角色"
         :visible.sync="setRoleDialogVisible"
@@ -162,6 +162,7 @@ export default {
       cb(new Error('请输入合法的手机号'))
     }
     return {
+      // 查询信息
       queryInfo: {
         query: '',
         pagenum: 1,
@@ -245,13 +246,16 @@ export default {
       this.queryInfo.pagesize = newsize
       this.getUserList()
     },
+    // 切换分页的监听事件
     handleCurrentChange(newpage) {
       this.queryInfo.pagenum = newpage
       this.getUserList()
     },
+    // 监听添加对话框的关闭事件
     addDialogClosed() {
       this.$refs.addFormRef.resetFields()
     },
+    // 编辑对话框的关闭事件
     editDialogClosed() {
       this.$refs.editFormRef.resetFields()
     },
@@ -295,6 +299,7 @@ export default {
         this.$message.success('修改成功')
       })
     },
+    // 移除用户权限
     async removeUserById(userId) {
       const confirmResult = await this.$confirm(
         '是否删除该y用户, 是否继续?',

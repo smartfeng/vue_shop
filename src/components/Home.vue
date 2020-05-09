@@ -9,7 +9,7 @@
     </el-header>
     <el-container>
       <el-aside :width="isCollapse == true ? '64px' : '200px'">
-        <div class="toggle-button" @click="toggleCollapse">|||</div>
+        <div class="toggle-button" @click="toggleCollapse">&lt;&gt;</div>
         <el-menu :default-active="activePath" router :collapse="isCollapse" :collapse-transition="false" unique-opened background-color="#333744" text-color="#fff" active-text-color="#409eff">
           <!-- 一级菜单 -->
           <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
@@ -42,7 +42,9 @@ export default {
   },
   data() {
     return {
+      // 菜单列表
       menuList: [],
+      // 菜单的图标项
       iconObj: {
         '125': 'iconfont icon-certified-supplier',
         '103': 'iconfont icon-online-tracking',
@@ -50,7 +52,9 @@ export default {
         '102': 'iconfont icon-tool',
         '145': 'iconfont icon-CurrencyConverter'
       },
+      // 折叠菜单
       isCollapse: false,
+      // 当前菜单高亮
       activePath: ''
     }
   },
@@ -59,17 +63,19 @@ export default {
       window.sessionStorage.clear()
       this.$router.push('/login')
     },
+    // 请求菜单接口
     async getMenuList() {
       const { data: res } = await this.$http.get('menus')
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       // 给侧边栏数据赋值
       this.menuList = res.data
-    //   console.log(this.menuList)
     },
     toggleCollapse() {
       this.isCollapse = !this.isCollapse
     },
+    // 保存菜单高亮的当前的状态
     saveNavState(activePath) {
+      // 保存到本地
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
     }

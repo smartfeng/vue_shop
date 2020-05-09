@@ -29,10 +29,12 @@
 export default {
   data () {
     return {
+      // 登录表单
       loginForm: {
         username: '',
         password: ''
       },
+      // 登录校验规则
       loginFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -46,9 +48,11 @@ export default {
     }
   },
   methods: {
+    // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
     resetLoginForm () {
       this.$refs.loginFormRef.resetFields()
     },
+    // 登录请求接口
     login () {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return false
