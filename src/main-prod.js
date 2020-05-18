@@ -12,12 +12,14 @@ import Nprogress from 'nprogress'
 
 import axios from 'axios'
 axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
+
 // 在request拦截器中显示进度条 Nprogress.start()
 axios.interceptors.request.use(config => {
   Nprogress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
+
 // 在response拦截器中隐藏进度条 Nprogress.done()
 axios.interceptors.response.use(config => {
   Nprogress.done()
